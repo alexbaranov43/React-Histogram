@@ -28,6 +28,15 @@
   color: #61dafb;
 }
 
+.SVG {
+  height: 600px;
+  width: 1000px;
+}
+#chart {
+    background-color: #F5F2EB;
+    border: 1px solid #CCC;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

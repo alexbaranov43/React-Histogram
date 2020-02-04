@@ -1,18 +1,14 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Histogram from './Histogram';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Generate Random Numbers
-        </p>
-        <button>
-          Generate
-          </button>
+        <Histogram />
       </header>
     </div>
   );
