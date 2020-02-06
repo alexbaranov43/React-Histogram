@@ -12,39 +12,61 @@ class Histogram extends React.Component {
   }
 
   drawChart() {
+    //get numbers
     let dataPoints = this.generateNumbers();
+
+    //pass X- axis values into an array
     const values = []
     for (let num in dataPoints) {
       values.push(Number(num))
     }
+
     values.sort();
+    // set margins and widths/heights
     const margin = 60;
     const width = 1000 - 2 * margin;
     const height = 600 - 2 * margin;
-    const yScale = d3
-      .scaleLinear()
-      .range([height, 0])
-      .domain([0, 100]);
 
+    // scaling y axis for bar and lin graph
+    const yScale = d3
+    .scaleLinear()
+    .range([height, 0])
+    .domain([0, 100]);
+    
     const svg = d3.select("svg");
-    var container = document.getElementById('svg');
+
+    // empty old graph every time new one is generated
+    let container = document.getElementById('svg');
     while (container.firstChild) container.removeChild(container.firstChild);
+    
+    // create chart itself
     const chart = svg
-      .append("g")
-      .attr("transform", `translate(${margin}, ${margin})`);
-      
+    .append("g")
+    .attr("transform", `translate(${margin}, ${margin})`);
+    
     chart.append("g").call(d3.axisLeft(yScale));
+    
+    // scaling x axis for bar & line graph
     const xScale = d3
       .scaleBand()
       .range([0, width])
       .domain(values.map((s) => s))
       .padding(0.1);
+   
+    //create variable for the line of the line graph
+    const valueline = d3
+      .line()
+      .x(function (d) { return xScale(d) })
+      .y(function (d) { return yScale(dataPoints[d]) });
 
+
+    // x axis
     chart
       .append("g")
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(xScale));
     
+    // create histogram bars
     chart
       .selectAll()
       .data(values)
@@ -55,7 +77,8 @@ class Histogram extends React.Component {
       .attr("height", function (s) { return height - yScale(dataPoints[s]) })
       .attr("width", xScale.bandwidth())
       .attr("fill", "green");
-      
+    
+    //create vertical grid
     chart
       .append("g")
       .attr("class", "grid")
@@ -68,16 +91,7 @@ class Histogram extends React.Component {
           .tickFormat("")
       );
 
-    chart
-      .append("g")
-      .attr("class", "grid")
-      .call(
-        d3
-          .axisLeft()
-          .scale(yScale)
-          .tickSize(-width, 0, 0)
-          .tickFormat("")
-      );
+    // frequency label of y axis
     svg
       .append("text")
       .attr("x", -(height / 2) - margin)
@@ -86,7 +100,16 @@ class Histogram extends React.Component {
       .attr("text-anchor", "middle")
       .attr("fill", "white")
       .text("Frequency of Each Number");
-
+    
+    // add the line to the histogram
+      chart
+        .append("path")
+        .datum(values)
+        .attr("class", "line")
+        .attr("d", valueline(values))
+        .style("fill", "none")
+        .style("stroke", "orange")
+        .style("stoke-width", "3px");
   }
   // function to generate random numbers into numberFrequency Object
   generateNumbers() {
@@ -101,7 +124,6 @@ class Histogram extends React.Component {
         numberFrequency[num] = 1;
       }
     }
-    console.log(numberFrequency);
     return numberFrequency;
   }
 
