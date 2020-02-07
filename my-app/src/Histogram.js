@@ -19,12 +19,8 @@ class Histogram extends React.Component {
 
     updateDimensions() {
       if (window.innerWidth <= 500) {
-        console.log("height: " + window.innerHeight)
-        console.log("width: " + window.innerWidth)
         this.setState({ width: 340, height: 270, lineAdjustment: 15 });
       } else {
-        console.log("height: " + window.innerHeight)
-        console.log("width: " + window.innerWidth)
         let margin = 60
         this.setState({ width: 1000 - 2 * margin, height: 600 - 2 * margin, lineAdjustment: 40 });
       }
