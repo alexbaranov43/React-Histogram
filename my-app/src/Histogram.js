@@ -9,6 +9,11 @@ class Histogram extends React.Component {
   constructor(props) {
     super(props);
     this.generateNumbers = this.generateNumbers.bind(this);
+    this.margin = 60;
+    this.state = {
+      width : 450 - 2 * this.margin,
+      height : 270 - 2 * this.margin,
+    }
   }
 
   drawChart() {
@@ -23,9 +28,9 @@ class Histogram extends React.Component {
 
     values.sort();
     // set margins and widths/heights
-    const margin = 60;
-    const width = 1000 - 2 * margin;
-    const height = 600 - 2 * margin;
+    const margin = this.margin;
+    const width = this.state.width;
+    const height = this.state.height;
 
     // scaling y axis for bar and lin graph
     const yScale = d3
@@ -42,7 +47,7 @@ class Histogram extends React.Component {
     // create chart itself
     const chart = svg
     .append("g")
-    .attr("transform", `translate(${margin}, ${margin})`);
+    .attr("transform", `translate(${margin}, ${margin})`)
     
     chart.append("g").call(d3.axisLeft(yScale));
     
@@ -56,7 +61,7 @@ class Histogram extends React.Component {
     //create variable for the line of the line graph
     const valueline = d3
       .line()
-      .x(function (d) { return xScale(d) })
+      .x(function (d) { return xScale(d) + 15})
       .y(function (d) { return yScale(dataPoints[d]) });
 
 
@@ -99,7 +104,7 @@ class Histogram extends React.Component {
       .attr("transform", "rotate(-90)")
       .attr("text-anchor", "middle")
       .attr("fill", "white")
-      .text("Frequency of Each Number");
+      .text("# Frequency");
     
     // add the line to the histogram
       chart
@@ -110,7 +115,10 @@ class Histogram extends React.Component {
         .style("fill", "none")
         .style("stroke", "orange")
         .style("stoke-width", "3px");
-  }
+  };
+
+
+  
   // function to generate random numbers into numberFrequency Object
   generateNumbers() {
     // 0 - 1 Object and count per each instance of number
@@ -131,11 +139,10 @@ class Histogram extends React.Component {
     return (
       <div>
         <div>
-          <h2>Generate Histogram of Number Frequencies</h2>
-          <h3>Number Range from 0 - 1</h3>
-          <p>(100 Numbers Generated)</p>
-          
-          <button onClick={this.drawChart.bind(this)}>Generate</button>
+          <h4>Chart of Number Frequencies</h4>
+          <h4>Number Range from 0 - 1</h4>
+          <h4>(100 Numbers Generated)</h4>
+          <button className="btn btn-info" onClick={this.drawChart.bind(this)}>Generate Chart</button>
         </div>
         <svg className="SVG" id="svg"/>
       </div>
