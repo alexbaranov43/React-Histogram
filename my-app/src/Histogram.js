@@ -11,9 +11,34 @@ class Histogram extends React.Component {
     this.generateNumbers = this.generateNumbers.bind(this);
     this.margin = 60;
     this.state = {
-      width : 450 - 2 * this.margin,
-      height : 270 - 2 * this.margin,
+      width : 1000 - 2 * this.margin,
+      height: 600 - 2 * this.margin,
+      lineAdjustment: 40
     }
+  }
+
+    updateDimensions() {
+      if (window.innerWidth <= 500) {
+        console.log("height: " + window.innerHeight)
+        console.log("width: " + window.innerWidth)
+        this.setState({ width: 340, height: 270, lineAdjustment: 15 });
+      } else {
+        console.log("height: " + window.innerHeight)
+        console.log("width: " + window.innerWidth)
+        let margin = 60
+        this.setState({ width: 1000 - 2 * margin, height: 600 - 2 * margin, lineAdjustment: 40 });
+      }
+    }
+
+   //Add event listener
+  componentDidMount() {
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions.bind(this));
+  }
+
+  //  Remove event listener
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions.bind(this));
   }
 
   drawChart() {
@@ -31,6 +56,7 @@ class Histogram extends React.Component {
     const margin = this.margin;
     const width = this.state.width;
     const height = this.state.height;
+    const lineAdjustment = this.state.lineAdjustment;
 
     // scaling y axis for bar and lin graph
     const yScale = d3
@@ -61,7 +87,7 @@ class Histogram extends React.Component {
     //create variable for the line of the line graph
     const valueline = d3
       .line()
-      .x(function (d) { return xScale(d) + 15})
+      .x(function (d) { return xScale(d) + lineAdjustment })
       .y(function (d) { return yScale(dataPoints[d]) });
 
 
@@ -103,6 +129,7 @@ class Histogram extends React.Component {
       .attr("y", margin / 2.4)
       .attr("transform", "rotate(-90)")
       .attr("text-anchor", "middle")
+      .attr("font-size", 10)
       .attr("fill", "white")
       .text("# Frequency");
     
